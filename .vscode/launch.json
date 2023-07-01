@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "[DEBUG] FRONTEND",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:3000",
+            "webRoot": "${workspaceFolder}",
+            "preLaunchTask": "npm-dev",
+            "postDebugTask": "Terminate All Tasks"
+        },   
+    ]
+}
