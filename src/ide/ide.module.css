@@ -1,6 +1,14 @@
-.ide_container {
+#ide_container {
     width: 600px;
     height: 703px;
     background-color: teal;
     border-right: 2px solid cyan;
+    display: flex;
+    flex-direction: column;
+}
+
+#ide_editor {
+    background: linear-gradient(#008080, #00f0f0, #00f0f0);
+    width: 600px;
+    flex: 9;
 }

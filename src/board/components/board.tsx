@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js';
+import { Accessor } from 'solid-js';
 import { Player } from '../../player/models/player.model';
 import { BackgroundTile } from '../tiles/components/background_tile';
 import styles from './board.module.css';
@@ -6,7 +6,7 @@ import styles from './board.module.css';
 const tileWidth = 40;
 const tileHeight = tileWidth;
 
-export const Board = () => {
+export const Board = (props: { getPlayer: Accessor<Player> }) => {
     const width = 840;
     const height = 703;
 
@@ -14,43 +14,6 @@ export const Board = () => {
     const numberColumns = Math.floor(width / tileWidth);
 
     const tiles = [];
-
-    const [getPlayer, setPlayer] = createSignal<Player>({
-        x: 0,
-        y: 0,
-    });
-
-    const handleKeyPressed = (event: KeyboardEvent) => {
-        if (event.key == 'w') {
-            setPlayer((player) => {
-                return {
-                    x: player.x,
-                    y: player.y + tileHeight,
-                };
-            });
-        } else if (event.key == 'd') {
-            setPlayer((player) => {
-                return {
-                    x: player.x + tileWidth,
-                    y: player.y,
-                };
-            });
-        } else if (event.key == 'a') {
-            setPlayer((player) => {
-                return {
-                    x: player.x - tileWidth,
-                    y: player.y,
-                };
-            });
-        } else if (event.key == 's') {
-            setPlayer((player) => {
-                return {
-                    x: player.x,
-                    y: player.y - tileHeight,
-                };
-            });
-        }
-    };
 
     for (let row = 0; row < numberRows; row++) {
         const y = row * tileHeight;
@@ -81,8 +44,6 @@ export const Board = () => {
             width={width}
             height={height}
             stroke={'black'}
-            tabIndex={'0'}
-            onKeyPress={handleKeyPressed}
         >
             <g>
                 <rect
@@ -95,8 +56,8 @@ export const Board = () => {
                     width={tileWidth}
                     height={tileHeight}
                     fill={'yellow'}
-                    x={getPlayer().x}
-                    y={getPlayer().y}
+                    x={props.getPlayer().x}
+                    y={props.getPlayer().y}
                 />
             </g>
         </svg>
