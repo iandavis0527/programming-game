@@ -8,7 +8,7 @@ export class SubscribingService extends BaseService {
         this.subscriptions.push(subscription);
     }
 
-    protected cleanup(): void {
+    async cleanup(): Promise<void> {
         this.cleanupSubscriptions();
     }
 

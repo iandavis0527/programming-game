@@ -1,4 +1,4 @@
-import { ReactiveSignalService } from '../../utils/services/reactive-signal.service';
+import { ReactiveSignalService } from 'utils/services/reactive-signal.service';
 import { Player } from '../models/player.model';
 
 export class PlayerService extends ReactiveSignalService<Player> {

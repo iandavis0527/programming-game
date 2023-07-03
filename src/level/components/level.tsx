@@ -1,12 +1,12 @@
-import { Accessor } from 'solid-js';
-import { Player } from '../../player/models/player.model';
+import { GameService } from 'game/services/game.service';
+import { useService } from 'solid-services';
 import { BackgroundTile } from '../tiles/components/background_tile';
-import styles from './board.module.css';
+import { tileHeight, tileWidth } from '../tiles/models/tile';
+import styles from './level.module.css';
 
-const tileWidth = 40;
-const tileHeight = tileWidth;
+export const LevelComponent = () => {
+    const gameService = useService(GameService)();
 
-export const Board = (props: { getPlayer: Accessor<Player> }) => {
     const width = 840;
     const height = 703;
 
@@ -40,7 +40,7 @@ export const Board = (props: { getPlayer: Accessor<Player> }) => {
 
     return (
         <svg
-            class={styles.board_container}
+            class={styles.level_container}
             width={width}
             height={height}
             stroke={'black'}
@@ -56,8 +56,8 @@ export const Board = (props: { getPlayer: Accessor<Player> }) => {
                     width={tileWidth}
                     height={tileHeight}
                     fill={'yellow'}
-                    x={props.getPlayer().x}
-                    y={props.getPlayer().y}
+                    x={gameService.getPlayer()().x}
+                    y={gameService.getPlayer()().y}
                 />
             </g>
         </svg>
