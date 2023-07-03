@@ -10,6 +10,7 @@ import {
 import { SubscribingService } from '../../utils/services/subscribing.service';
 import { Viewport } from '../../viewport/models/viewport.model';
 import { ViewportService } from '../../viewport/services/viewport.service';
+import { levelOne } from '../data/levels/level1';
 
 export class GameService extends SubscribingService {
     private signalManager: MultiReactiveSignalManager;
@@ -62,34 +63,7 @@ export class GameService extends SubscribingService {
     }
 
     async loadLevelData(): Promise<Level> {
-        return {
-            tiles: [
-                {
-                    x: 0,
-                    y: 0,
-                },
-                {
-                    x: 1,
-                    y: 0,
-                },
-                {
-                    x: 2,
-                    y: 0,
-                },
-                {
-                    x: 3,
-                    y: 0,
-                },
-                {
-                    x: 4,
-                    y: 0,
-                },
-                {
-                    x: 5,
-                    y: 1,
-                },
-            ],
-        };
+        return levelOne;
     }
 
     async cleanup(): Promise<void> {

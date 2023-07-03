@@ -23,7 +23,7 @@ const ServiceManager = lazy(async () => {
     const gameService = useService(GameService)();
     const viewportService = useService(ViewportService)();
 
-    viewportService.onMediaQueried(window.innerWidth, window.innerHeight);
+    viewportService.onMediaQueried(840, 703);
 
     await gameService.initialize();
 

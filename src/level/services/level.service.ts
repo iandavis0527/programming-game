@@ -1,17 +1,18 @@
 import autoBind from 'auto-bind';
-import { distinctUntilChanged } from 'rxjs';
+import { distinctUntilChanged, zip } from 'rxjs';
 import { Accessor, createSignal } from 'solid-js';
 import { useService } from 'solid-services';
 import { GameService } from '../../game/services/game.service';
 import clamp from '../../utils/math/clamp';
 import { filterNulls } from '../../utils/reactive/filtering';
 import { SubscribingService } from '../../utils/services/subscribing.service';
+import { Viewport } from '../../viewport';
 import { Level } from '../models/level.model';
 import {
     selectMaxTileHeight,
     selectMaxTileWidth,
 } from '../selectors/level.selector';
-import { tileHeight, tileWidth } from '../tiles/models/tile';
+import { Tile, tileHeight, tileWidth } from '../tiles/models/tile';
 
 export interface Point {
     x: number;
@@ -112,23 +113,26 @@ export class LevelService extends SubscribingService {
 
     getPlayerWindowCoordinates(): Accessor<Point> {
         const player = this.gameService.getPlayer()();
-
-        const point = this.convertWorldCoordinates(player);
+        const viewport = this.gameService.getViewport()();
+        const point = this.convertWorldCoordinates(viewport, player);
 
         const [getCoords, setCoords] = createSignal<{ x: number; y: number }>(
             point,
         );
 
-        this.gameService.observePlayer().subscribe((player) => {
-            console.debug(player);
-            setCoords(this.convertWorldCoordinates(player));
-        });
+        this.trackSubscription(
+            zip(
+                this.gameService.observePlayer(),
+                this.gameService.observeViewport(),
+            ).subscribe(([player, viewport]) => {
+                setCoords(this.convertWorldCoordinates(viewport, player));
+            }),
+        );
 
         return getCoords;
     }
 
-    private convertWorldCoordinates(point: Point): Point {
-        const viewport = this.gameService.getViewport()();
+    private convertWorldCoordinates(viewport: Viewport, point: Point): Point {
         const actualHeight =
             Math.floor(viewport.height / tileHeight) * tileHeight - tileHeight;
 
@@ -137,7 +141,30 @@ export class LevelService extends SubscribingService {
             y: actualHeight - point.y * tileHeight,
         };
 
-        console.debug(coords);
         return coords;
+    }
+
+    getBackgroundTiles(): Accessor<Tile[]> {
+        const viewport = this.gameService.getViewport()();
+        const level = this.gameService.getLevel()();
+        const tiles = this.convertLevelTiles(viewport, level);
+        const [getTiles, setTiles] = createSignal<Tile[]>(tiles);
+        this.trackSubscription(
+            zip(
+                this.gameService.observeViewport(),
+                this.gameService.observeLevel(),
+            ).subscribe(([viewport, level]) => {
+                setTiles(this.convertLevelTiles(viewport, level));
+            }),
+        );
+
+        return getTiles;
+    }
+
+    private convertLevelTiles(viewport: Viewport, level: Level): Tile[] {
+        console.debug(level);
+        return level.tiles.map((tile) =>
+            this.convertWorldCoordinates(viewport, tile),
+        );
     }
 }

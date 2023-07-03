@@ -1,56 +1,43 @@
 import { useService } from 'solid-services';
+import { GameService } from '../../game';
 import { LevelService } from '../services/level.service';
 import { BackgroundTile } from '../tiles/components/background_tile';
 import { tileHeight, tileWidth } from '../tiles/models/tile';
 import styles from './level.module.css';
 
 export const LevelComponent = () => {
+    const gameService = useService(GameService)();
     const levelService = useService(LevelService)();
-
-    const width = 840;
-    const height = 703;
-
-    const numberRows = Math.floor(height / tileHeight);
-    const numberColumns = Math.floor(width / tileWidth);
-
-    const tiles = [];
-
-    for (let row = 0; row < numberRows; row++) {
-        const y = row * tileHeight;
-
-        const evenColor = row % 2 == 0 ? 'red' : 'blue';
-        const oddColor = evenColor == 'red' ? 'blue' : 'red';
-
-        for (let column = 0; column < numberColumns; column++) {
-            const x = column * tileWidth;
-            const fill = column % 2 == 0 ? evenColor : oddColor;
-
-            tiles.push(
-                <BackgroundTile
-                    point={{ x: x, y: y }}
-                    tileWidth={tileWidth}
-                    tileHeight={tileHeight}
-                    fill={fill}
-                    stroke={'white'}
-                />,
-            );
-        }
-    }
 
     return (
         <svg
             class={styles.level_container}
-            width={width}
-            height={height}
+            width={gameService.getViewport()().width}
+            height={gameService.getViewport()().height}
             stroke={'black'}
         >
             <g>
                 <rect
-                    width={width}
-                    height={height}
+                    width={gameService.getViewport()().width}
+                    height={gameService.getViewport()().height}
                     fill={'white'}
                 />
-                {tiles}
+                {levelService
+                    .getBackgroundTiles()()
+                    .map((tile) => {
+                        return (
+                            <BackgroundTile
+                                tileWidth={tileWidth}
+                                tileHeight={tileHeight}
+                                fill={
+                                    tile.x % 2 == 0 && tile.y % 2 != 0
+                                        ? 'red'
+                                        : 'blue'
+                                }
+                                point={tile}
+                            />
+                        );
+                    })}
                 <BackgroundTile
                     tileWidth={tileWidth}
                     tileHeight={tileHeight}
