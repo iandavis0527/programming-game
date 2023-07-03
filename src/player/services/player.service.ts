@@ -1,11 +1,12 @@
-import { Service, useService } from 'solid-services';
-import { BoardService } from '../../board/services/board.service';
+import { ReactiveSignalService } from '../../utils/services/reactive-signal.service';
+import { Player } from '../models/player.model';
 
-export class PlayerService extends Service {
-    private readonly boardService: BoardService;
-
+export class PlayerService extends ReactiveSignalService<Player> {
     constructor() {
-        super();
-        this.boardService = useService(BoardService)();
+        const player = {
+            x: 0,
+            y: 0,
+        };
+        super(player);
     }
 }

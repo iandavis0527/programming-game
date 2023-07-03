@@ -12,7 +12,18 @@ export class BoardService extends ReactiveSignalService<Board> {
     private maxTileHeight: number;
     private maxTileWidth: number;
 
-    constructor(tile_data: Tile[], player: Player) {
+    constructor() {
+        const tile_data: Tile[] = [];
+
+        for (let row = 0; row < 20; row++) {
+            for (let column = 0; column < 20; column++) {}
+        }
+
+        const player = {
+            x: 0,
+            y: 0,
+        };
+
         super({
             tiles: tile_data,
             player: player,
