@@ -1,10 +1,10 @@
-import styles from 'App.module.css';
-import { GameService } from 'game/services/game.service';
-import { CodeIDE } from 'ide/components/ide.component';
-import { LevelComponent } from 'level';
 import { Component, lazy } from 'solid-js';
 import { ServiceRegistry, useService } from 'solid-services';
-import { ViewportService } from 'viewport';
+import styles from './App.module.css';
+import { GameService } from './game/services/game.service';
+import { CodeIDE } from './ide/components/ide.component';
+import { LevelComponent } from './level';
+import { ViewportService } from './viewport';
 
 const App: Component = () => {
     return (

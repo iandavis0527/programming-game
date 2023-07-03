@@ -1,7 +1,7 @@
 import { Observable, firstValueFrom } from 'rxjs';
-import { filterNulls } from 'utils/reactive/filtering';
-import { ReactiveSignalService } from 'utils/services/reactive-signal.service';
-import { Viewport } from 'viewport/models/viewport.model';
+import { filterNulls } from '../../utils/reactive/filtering';
+import { ReactiveSignalService } from '../../utils/services/reactive-signal.service';
+import { Viewport } from '../../viewport/models/viewport.model';
 
 export class ViewportService extends ReactiveSignalService<
     Viewport | undefined

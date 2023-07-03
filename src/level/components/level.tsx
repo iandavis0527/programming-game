@@ -1,11 +1,11 @@
-import { GameService } from 'game/services/game.service';
 import { useService } from 'solid-services';
+import { LevelService } from '../services/level.service';
 import { BackgroundTile } from '../tiles/components/background_tile';
 import { tileHeight, tileWidth } from '../tiles/models/tile';
 import styles from './level.module.css';
 
 export const LevelComponent = () => {
-    const gameService = useService(GameService)();
+    const levelService = useService(LevelService)();
 
     const width = 840;
     const height = 703;
@@ -27,8 +27,7 @@ export const LevelComponent = () => {
 
             tiles.push(
                 <BackgroundTile
-                    x={x}
-                    y={y}
+                    point={{ x: x, y: y }}
                     tileWidth={tileWidth}
                     tileHeight={tileHeight}
                     fill={fill}
@@ -52,12 +51,11 @@ export const LevelComponent = () => {
                     fill={'white'}
                 />
                 {tiles}
-                <rect
-                    width={tileWidth}
-                    height={tileHeight}
+                <BackgroundTile
+                    tileWidth={tileWidth}
+                    tileHeight={tileHeight}
                     fill={'yellow'}
-                    x={gameService.getPlayer()().x}
-                    y={gameService.getPlayer()().y}
+                    point={levelService.getPlayerWindowCoordinates()()}
                 />
             </g>
         </svg>

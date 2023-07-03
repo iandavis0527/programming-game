@@ -1,15 +1,15 @@
-import { Level } from 'level/models/level.model';
-import { Player } from 'player/models/player.model';
 import { Observable } from 'rxjs';
 import { Accessor } from 'solid-js';
 import { useService } from 'solid-services';
+import { Level } from '../../level/models/level.model';
+import { Player } from '../../player/models/player.model';
 import {
     MultiReactiveSignalManager,
     ReactiveSignalConnection,
-} from 'utils/services/reactive-signal.service';
-import { SubscribingService } from 'utils/services/subscribing.service';
-import { Viewport } from 'viewport/models/viewport.model';
-import { ViewportService } from 'viewport/services/viewport.service';
+} from '../../utils/services/reactive-signal.service';
+import { SubscribingService } from '../../utils/services/subscribing.service';
+import { Viewport } from '../../viewport/models/viewport.model';
+import { ViewportService } from '../../viewport/services/viewport.service';
 
 export class GameService extends SubscribingService {
     private signalManager: MultiReactiveSignalManager;

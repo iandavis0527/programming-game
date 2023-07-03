@@ -1,15 +1,22 @@
 import autoBind from 'auto-bind';
-import { GameService } from 'game/services/game.service';
 import { distinctUntilChanged } from 'rxjs';
+import { Accessor, createSignal } from 'solid-js';
 import { useService } from 'solid-services';
-import clamp from 'utils/math/clamp';
-import { filterNulls } from 'utils/reactive/filtering';
-import { SubscribingService } from 'utils/services/subscribing.service';
+import { GameService } from '../../game/services/game.service';
+import clamp from '../../utils/math/clamp';
+import { filterNulls } from '../../utils/reactive/filtering';
+import { SubscribingService } from '../../utils/services/subscribing.service';
 import { Level } from '../models/level.model';
 import {
     selectMaxTileHeight,
     selectMaxTileWidth,
 } from '../selectors/level.selector';
+import { tileHeight, tileWidth } from '../tiles/models/tile';
+
+export interface Point {
+    x: number;
+    y: number;
+}
 
 export class LevelService extends SubscribingService {
     private maxTileHeight!: number;
@@ -101,5 +108,36 @@ export class LevelService extends SubscribingService {
      */
     movePlayerRight() {
         this.movePlayerPosition({ x: 1, y: 0 });
+    }
+
+    getPlayerWindowCoordinates(): Accessor<Point> {
+        const player = this.gameService.getPlayer()();
+
+        const point = this.convertWorldCoordinates(player);
+
+        const [getCoords, setCoords] = createSignal<{ x: number; y: number }>(
+            point,
+        );
+
+        this.gameService.observePlayer().subscribe((player) => {
+            console.debug(player);
+            setCoords(this.convertWorldCoordinates(player));
+        });
+
+        return getCoords;
+    }
+
+    private convertWorldCoordinates(point: Point): Point {
+        const viewport = this.gameService.getViewport()();
+        const actualHeight =
+            Math.floor(viewport.height / tileHeight) * tileHeight - tileHeight;
+
+        const coords = {
+            x: point.x * tileWidth,
+            y: actualHeight - point.y * tileHeight,
+        };
+
+        console.debug(coords);
+        return coords;
     }
 }
