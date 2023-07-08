@@ -57,8 +57,7 @@ export class GameService extends SubscribingService {
 
     async loadPlayerData(): Promise<Player> {
         return {
-            x: 0,
-            y: 0,
+            worldLocation: { x: 0, y: 0 },
         };
     }
 

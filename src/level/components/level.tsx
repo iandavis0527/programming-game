@@ -25,16 +25,23 @@ export const LevelComponent = () => {
                 {levelService
                     .getBackgroundTiles()()
                     .map((tile) => {
+                        console.debug(
+                            tile.worldLocation.x,
+                            tile.worldLocation.y,
+                            tile.worldLocation.x % 2 == 0,
+                            tile.worldLocation.y % 2 != 0,
+                        );
                         return (
                             <BackgroundTile
                                 tileWidth={tileWidth}
                                 tileHeight={tileHeight}
                                 fill={
-                                    tile.x % 2 == 0 && tile.y % 2 != 0
+                                    tile.worldLocation.x % 2 == 0 &&
+                                    tile.worldLocation.y % 2 != 0
                                         ? 'red'
                                         : 'blue'
                                 }
-                                point={tile}
+                                tile={tile}
                             />
                         );
                     })}
@@ -42,7 +49,7 @@ export const LevelComponent = () => {
                     tileWidth={tileWidth}
                     tileHeight={tileHeight}
                     fill={'yellow'}
-                    point={levelService.getPlayerWindowCoordinates()()}
+                    tile={levelService.getPlayerTile()()}
                 />
             </g>
         </svg>

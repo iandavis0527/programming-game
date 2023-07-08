@@ -3,6 +3,7 @@ import { distinctUntilChanged, zip } from 'rxjs';
 import { Accessor, createSignal } from 'solid-js';
 import { useService } from 'solid-services';
 import { GameService } from '../../game/services/game.service';
+import { Player } from '../../player/models/player.model';
 import clamp from '../../utils/math/clamp';
 import { filterNulls } from '../../utils/reactive/filtering';
 import { SubscribingService } from '../../utils/services/subscribing.service';
@@ -63,23 +64,25 @@ export class LevelService extends SubscribingService {
     movePlayerPosition(position: { x: number; y: number }) {
         const player = this.gameService.getPlayer()();
 
-        player.x += position.x;
-        player.x = clamp({
-            value: player.x,
+        player.worldLocation.x += position.x;
+        player.worldLocation.x = clamp({
+            value: player.worldLocation.x,
             min: 0,
             max: this.maxTileWidth,
         });
 
-        player.y += position.y;
-        player.y = clamp({
-            value: player.y,
+        player.worldLocation.y += position.y;
+        player.worldLocation.y = clamp({
+            value: player.worldLocation.y,
             min: 0,
             max: this.maxTileHeight,
         });
 
+        const viewport = this.gameService.getViewport()();
+
         this.gameService.updatePlayer({
-            x: player.x,
-            y: player.y,
+            worldLocation: player.worldLocation,
+            point: this.convertWorldCoordinates(viewport, player.worldLocation),
         });
     }
 
@@ -114,7 +117,10 @@ export class LevelService extends SubscribingService {
     getPlayerWindowCoordinates(): Accessor<Point> {
         const player = this.gameService.getPlayer()();
         const viewport = this.gameService.getViewport()();
-        const point = this.convertWorldCoordinates(viewport, player);
+        const point = this.convertWorldCoordinates(
+            viewport,
+            player.worldLocation,
+        );
 
         const [getCoords, setCoords] = createSignal<{ x: number; y: number }>(
             point,
@@ -125,11 +131,47 @@ export class LevelService extends SubscribingService {
                 this.gameService.observePlayer(),
                 this.gameService.observeViewport(),
             ).subscribe(([player, viewport]) => {
-                setCoords(this.convertWorldCoordinates(viewport, player));
+                setCoords(
+                    this.convertWorldCoordinates(
+                        viewport,
+                        player.worldLocation,
+                    ),
+                );
             }),
         );
 
         return getCoords;
+    }
+
+    getPlayerTile(): Accessor<Player> {
+        const player = this.gameService.getPlayer()();
+        const viewport = this.gameService.getViewport()();
+        const point = this.convertWorldCoordinates(
+            viewport,
+            player.worldLocation,
+        );
+
+        const [getPlayer, setPlayer] = createSignal<Player>({
+            ...player,
+            point: point,
+        });
+
+        this.trackSubscription(
+            zip(
+                this.gameService.observePlayer(),
+                this.gameService.observeViewport(),
+            ).subscribe(([player, viewport]) => {
+                setPlayer({
+                    ...player,
+                    point: this.convertWorldCoordinates(
+                        viewport,
+                        player.worldLocation,
+                    ),
+                });
+            }),
+        );
+
+        return getPlayer;
     }
 
     private convertWorldCoordinates(viewport: Viewport, point: Point): Point {
@@ -163,8 +205,14 @@ export class LevelService extends SubscribingService {
 
     private convertLevelTiles(viewport: Viewport, level: Level): Tile[] {
         console.debug(level);
-        return level.tiles.map((tile) =>
-            this.convertWorldCoordinates(viewport, tile),
-        );
+        return level.tiles.map((tile) => {
+            return {
+                ...tile,
+                point: this.convertWorldCoordinates(
+                    viewport,
+                    tile.worldLocation,
+                ),
+            };
+        });
     }
 }
