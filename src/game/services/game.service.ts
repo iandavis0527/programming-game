@@ -58,6 +58,7 @@ export class GameService extends SubscribingService {
     async loadPlayerData(): Promise<Player> {
         return {
             worldLocation: { x: 0, y: 0 },
+            startingPosition: { x: 0, y: 0 },
         };
     }
 
@@ -76,10 +77,12 @@ export class GameService extends SubscribingService {
     updatePlayer(player: Partial<Player>) {
         const current = this.playerSignalConnection.getter();
 
-        this.playerSignalConnection.next({
+        const newPlayer = {
             ...current,
             ...player,
-        });
+        };
+
+        this.playerSignalConnection.next(newPlayer);
     }
 
     getLevel(): Accessor<Level> {

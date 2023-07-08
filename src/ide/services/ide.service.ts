@@ -15,6 +15,10 @@ export class IDEService extends BaseService {
     }
 
     async onProgramRun(program: string) {
+        this.levelService.resetPlayer();
+
+        await timeout(450);
+
         const statements = program.split('\n');
 
         for (const statement of statements) {

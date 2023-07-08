@@ -1,4 +1,5 @@
 import autoBind from 'auto-bind';
+import { cloneDeep } from 'lodash';
 import { distinctUntilChanged, zip } from 'rxjs';
 import { Accessor, createSignal } from 'solid-js';
 import { useService } from 'solid-services';
@@ -112,6 +113,18 @@ export class LevelService extends SubscribingService {
      */
     movePlayerRight() {
         this.movePlayerPosition({ x: 1, y: 0 });
+    }
+
+    resetPlayer() {
+        const player = this.gameService.getPlayer()();
+        const viewport = this.gameService.getViewport()();
+        const original = cloneDeep(player.startingPosition);
+        const originalPoint = this.convertWorldCoordinates(viewport, original);
+
+        this.gameService.updatePlayer({
+            worldLocation: original,
+            point: originalPoint,
+        });
     }
 
     getPlayerWindowCoordinates(): Accessor<Point> {

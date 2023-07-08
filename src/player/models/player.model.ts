@@ -1,3 +1,5 @@
-import { Tile } from '../../level';
+import { Point, Tile } from '../../level';
 
-export interface Player extends Tile {}
+export interface Player extends Tile {
+    startingPosition: Point;
+}
