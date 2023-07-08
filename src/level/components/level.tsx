@@ -31,16 +31,27 @@ export const LevelComponent = () => {
                             tile.worldLocation.x % 2 == 0,
                             tile.worldLocation.y % 2 != 0,
                         );
+                        let color = 'red';
+
+                        if (tile.worldLocation.x % 2 == 0) {
+                            if (tile.worldLocation.y % 2 == 0) {
+                                color = 'red';
+                            } else {
+                                color = 'blue';
+                            }
+                        } else {
+                            if (tile.worldLocation.y % 2 == 0) {
+                                color = 'blue';
+                            } else {
+                                color = 'red';
+                            }
+                        }
+
                         return (
                             <BackgroundTile
                                 tileWidth={tileWidth}
                                 tileHeight={tileHeight}
-                                fill={
-                                    tile.worldLocation.x % 2 == 0 &&
-                                    tile.worldLocation.y % 2 != 0
-                                        ? 'red'
-                                        : 'blue'
-                                }
+                                fill={color}
                                 tile={tile}
                             />
                         );
