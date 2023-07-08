@@ -1,16 +1,13 @@
 import { useService } from 'solid-services';
-import { GameService } from '../../game';
 import { LevelService } from '../../level';
 import { BaseService, timeout } from '../../utils';
 
 export class IDEService extends BaseService {
-    private gameService: GameService;
     private levelService: LevelService;
 
     constructor() {
         super();
 
-        this.gameService = useService(GameService)();
         this.levelService = useService(LevelService)();
     }
 
