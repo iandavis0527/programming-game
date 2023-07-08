@@ -22,6 +22,10 @@ export class IDEService extends BaseService {
                 this.levelService.movePlayerUp();
             } else if (statement.toLowerCase() == 'move_left()') {
                 this.levelService.movePlayerLeft();
+            } else if (statement.toLowerCase() == 'move_right()') {
+                this.levelService.movePlayerRight();
+            } else if (statement.toLowerCase() == 'move_backward()') {
+                this.levelService.movePlayerDown();
             }
 
             await timeout(450);
