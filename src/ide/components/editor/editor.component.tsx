@@ -12,7 +12,7 @@ export const Editor = (props: EditorProps) => {
 
     onMount(() => {
         const editor = monaco.editor.create(ideEditor, {
-            value: '// run program here.\nfunction main(): void {\n    move_forward();\n}',
+            value: '// run program here.\nmove_forward();',
             language: 'typescript',
             theme: 'vs-dark',
             automaticLayout: true,
