@@ -1,11 +1,9 @@
 import autoBind from 'auto-bind';
-import { cloneDeep } from 'lodash';
 import { distinctUntilChanged, zip } from 'rxjs';
 import { Accessor, createSignal } from 'solid-js';
 import { useService } from 'solid-services';
 import { GameService } from '../../game/services/game.service';
 import { Player } from '../../player/models/player.model';
-import clamp from '../../utils/math/clamp';
 import { filterNulls } from '../../utils/reactive/filtering';
 import { SubscribingService } from '../../utils/services/subscribing.service';
 import { Viewport } from '../../viewport';
@@ -56,75 +54,6 @@ export class LevelService extends SubscribingService {
     startNewLevel(level: Level) {
         this.maxTileHeight = selectMaxTileHeight(level);
         this.maxTileWidth = selectMaxTileWidth(level);
-    }
-
-    /**
-     * Handle updating the player position.
-     * @param position The new position to update.
-     */
-    movePlayerPosition(position: { x: number; y: number }) {
-        const player = this.gameService.getPlayer()();
-
-        player.worldLocation.x += position.x;
-        player.worldLocation.x = clamp({
-            value: player.worldLocation.x,
-            min: 0,
-            max: this.maxTileWidth,
-        });
-
-        player.worldLocation.y += position.y;
-        player.worldLocation.y = clamp({
-            value: player.worldLocation.y,
-            min: 0,
-            max: this.maxTileHeight,
-        });
-
-        const viewport = this.gameService.getViewport()();
-
-        this.gameService.updatePlayer({
-            worldLocation: player.worldLocation,
-            point: this.convertWorldCoordinates(viewport, player.worldLocation),
-        });
-    }
-
-    /**
-     * Move the player up one tile.
-     */
-    movePlayerUp() {
-        this.movePlayerPosition({ x: 0, y: 1 });
-    }
-
-    /**
-     * Move the player down one tile.
-     */
-    movePlayerDown() {
-        this.movePlayerPosition({ x: 0, y: -1 });
-    }
-
-    /**
-     * Move the player left one tile.
-     */
-    movePlayerLeft() {
-        this.movePlayerPosition({ x: -1, y: 0 });
-    }
-
-    /**
-     * Move the player right one tile.
-     */
-    movePlayerRight() {
-        this.movePlayerPosition({ x: 1, y: 0 });
-    }
-
-    resetPlayer() {
-        const player = this.gameService.getPlayer()();
-        const viewport = this.gameService.getViewport()();
-        const original = cloneDeep(player.startingPosition);
-        const originalPoint = this.convertWorldCoordinates(viewport, original);
-
-        this.gameService.updatePlayer({
-            worldLocation: original,
-            point: originalPoint,
-        });
     }
 
     getPlayerWindowCoordinates(): Accessor<Point> {
@@ -187,7 +116,7 @@ export class LevelService extends SubscribingService {
         return getPlayer;
     }
 
-    private convertWorldCoordinates(viewport: Viewport, point: Point): Point {
+    convertWorldCoordinates(viewport: Viewport, point: Point): Point {
         const actualHeight =
             Math.floor(viewport.height / tileHeight) * tileHeight - tileHeight;
 
@@ -226,5 +155,13 @@ export class LevelService extends SubscribingService {
                 ),
             };
         });
+    }
+
+    getMaxTileWidth() {
+        return this.maxTileWidth;
+    }
+
+    getMaxTileHeight() {
+        return this.maxTileHeight;
     }
 }

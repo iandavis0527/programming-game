@@ -1,18 +1,18 @@
 import { useService } from 'solid-services';
-import { LevelService } from '../../level';
+import { PlayerService } from '../../player/services/player.service';
 import { BaseService, timeout } from '../../utils';
 
 export class IDEService extends BaseService {
-    private levelService: LevelService;
+    private playerService: PlayerService;
 
     constructor() {
         super();
 
-        this.levelService = useService(LevelService)();
+        this.playerService = useService(PlayerService)();
     }
 
     async onProgramRun(program: string) {
-        this.levelService.resetPlayer();
+        this.playerService.resetPlayer();
 
         await timeout(450);
 
@@ -20,13 +20,13 @@ export class IDEService extends BaseService {
 
         for (const statement of statements) {
             if (statement.toLowerCase() == 'move_forward();') {
-                this.levelService.movePlayerUp();
+                this.playerService.movePlayerUp();
             } else if (statement.toLowerCase() == 'move_left();') {
-                this.levelService.movePlayerLeft();
+                this.playerService.movePlayerLeft();
             } else if (statement.toLowerCase() == 'move_right();') {
-                this.levelService.movePlayerRight();
+                this.playerService.movePlayerRight();
             } else if (statement.toLowerCase() == 'move_backward();') {
-                this.levelService.movePlayerDown();
+                this.playerService.movePlayerDown();
             }
 
             await timeout(450);
