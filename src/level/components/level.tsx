@@ -25,12 +25,6 @@ export const LevelComponent = () => {
                 {levelService
                     .getBackgroundTiles()()
                     .map((tile) => {
-                        console.debug(
-                            tile.worldLocation.x,
-                            tile.worldLocation.y,
-                            tile.worldLocation.x % 2 == 0,
-                            tile.worldLocation.y % 2 != 0,
-                        );
                         let color = 'red';
 
                         if (tile.worldLocation.x % 2 == 0) {

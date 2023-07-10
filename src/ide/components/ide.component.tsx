@@ -1,5 +1,7 @@
+import * as monaco from 'monaco-editor';
 import { useService } from 'solid-services';
 import { IDEService } from '../services/ide.service';
+import { Editor } from './editor/editor.component';
 import styles from './ide.module.css';
 
 export const CodeIDE = () => {
@@ -7,14 +9,14 @@ export const CodeIDE = () => {
     let ideEditor!: HTMLTextAreaElement;
 
     const onProgramRun = async () => {
-        const program = ideEditor.value;
+        const program = monaco.editor.getEditors()[0].getValue();
         ideService.onProgramRun(program);
     };
 
     return (
         <div id={styles.ide_container}>
-            <textarea
-                id={styles.ide_editor}
+            <Editor
+                height='703px'
                 ref={ideEditor}
             />
             <div id={styles.ide_button_row}>

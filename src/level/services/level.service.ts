@@ -217,7 +217,6 @@ export class LevelService extends SubscribingService {
     }
 
     private convertLevelTiles(viewport: Viewport, level: Level): Tile[] {
-        console.debug(level);
         return level.tiles.map((tile) => {
             return {
                 ...tile,
