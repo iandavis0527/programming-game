@@ -8,6 +8,27 @@
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "npm-dev",
             "postDebugTask": "Terminate All Tasks"
-        },   
+        },
+        {
+            "request": "launch",
+            "name": "[DEBUG] BACKEND",
+            "type": "python",
+            "module": "flask",
+            "args": [
+                "--app",
+                "server",
+                "run"
+            ],
+            "cwd": "${workspaceFolder}/backend"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "[DEBUG] Application",
+            "configurations": [
+                "[DEBUG] BACKEND",
+                "[DEBUG] FRONTEND",
+            ]
+        }
     ]
 }
