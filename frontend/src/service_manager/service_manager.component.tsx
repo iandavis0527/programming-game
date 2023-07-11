@@ -1,10 +1,10 @@
 import * as monaco from 'monaco-editor';
 import { Component, lazy } from 'solid-js';
 import { useService } from 'solid-services';
-import { bootstrapAPI } from './bootstrap_api';
-import { GameService } from './game';
-import { LevelService } from './level';
-import { ViewportService } from './viewport';
+import { bootstrapAPI } from '../bootstrap_api';
+import { GameService } from '../game';
+import { LevelService } from '../level';
+import { ViewportService } from '../viewport';
 
 export const ServiceManager = lazy(async () => {
     const gameService = useService(GameService)();
@@ -23,12 +23,7 @@ export const ServiceManager = lazy(async () => {
         allowNonTsExtensions: true,
     });
 
-    const libSource =
-        '\
-declare function move_forward(): void {}\
-declare function move_left(): void {}\
-declare function move_right(): void {}\
-declare function move_backward(): void {}';
+    const libSource = '';
     const libUri = 'ts:filename/robo.d.ts';
 
     monaco.languages.typescript.javascriptDefaults.addExtraLib(

@@ -1,3 +1,7 @@
+# Next Task
+
+Support for loading definition files directly from a .d.ts file in the repo into the monaco editor.
+
 ## Usage
 
 Those templates dependencies are maintained via [pnpm](https://pnpm.io) via `pnpm up -Lri`.

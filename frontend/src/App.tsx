@@ -4,7 +4,7 @@ import { ServiceRegistry } from 'solid-services';
 import styles from './App.module.css';
 import { CodeIDE } from './ide/components/ide.component';
 import { LevelComponent } from './level';
-import { ServiceManager } from './service_manager.component';
+import { ServiceManager } from './service_manager/service_manager.component';
 
 const App: Component = () => {
     return (
