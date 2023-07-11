@@ -24,7 +24,11 @@ export const ServiceManager = lazy(async () => {
     });
 
     const libSource =
-        'declare function move_forward(): void {}\ndeclare function move_left(): void {}\ndeclare function move_right(): void {}\b declare function move_backward(): void {}';
+        '\
+declare function move_forward(): void {}\
+declare function move_left(): void {}\
+declare function move_right(): void {}\
+declare function move_backward(): void {}';
     const libUri = 'ts:filename/robo.d.ts';
 
     monaco.languages.typescript.javascriptDefaults.addExtraLib(
