@@ -59,6 +59,7 @@ export class GameService extends SubscribingService {
         return {
             worldLocation: { x: 0, y: 0 },
             startingPosition: { x: 0, y: 0 },
+            isDead: false,
         };
     }
 

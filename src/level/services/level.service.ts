@@ -56,13 +56,13 @@ export class LevelService extends SubscribingService {
         this.maxTileWidth = selectMaxTileWidth(level);
     }
 
+    /**
+     * Get the screen space coordinates for the current player's position.
+     * @returns An accessor that will update the window coordinates for the player.
+     */
     getPlayerWindowCoordinates(): Accessor<Point> {
         const player = this.gameService.getPlayer()();
-        const viewport = this.gameService.getViewport()();
-        const point = this.convertWorldCoordinates(
-            viewport,
-            player.worldLocation,
-        );
+        const point = this.convertWorldCoordinates(player.worldLocation);
 
         const [getCoords, setCoords] = createSignal<{ x: number; y: number }>(
             point,
@@ -75,8 +75,8 @@ export class LevelService extends SubscribingService {
             ).subscribe(([player, viewport]) => {
                 setCoords(
                     this.convertWorldCoordinates(
-                        viewport,
                         player.worldLocation,
+                        viewport,
                     ),
                 );
             }),
@@ -85,13 +85,13 @@ export class LevelService extends SubscribingService {
         return getCoords;
     }
 
+    /**
+     * Get a display tile for the player, with coordinates converted.
+     * @returns The player tile.
+     */
     getPlayerTile(): Accessor<Player> {
         const player = this.gameService.getPlayer()();
-        const viewport = this.gameService.getViewport()();
-        const point = this.convertWorldCoordinates(
-            viewport,
-            player.worldLocation,
-        );
+        const point = this.convertWorldCoordinates(player.worldLocation);
 
         const [getPlayer, setPlayer] = createSignal<Player>({
             ...player,
@@ -106,8 +106,8 @@ export class LevelService extends SubscribingService {
                 setPlayer({
                     ...player,
                     point: this.convertWorldCoordinates(
-                        viewport,
                         player.worldLocation,
+                        viewport,
                     ),
                 });
             }),
@@ -116,7 +116,13 @@ export class LevelService extends SubscribingService {
         return getPlayer;
     }
 
-    convertWorldCoordinates(viewport: Viewport, point: Point): Point {
+    /**
+     * Convert world coordinates to screen space coordinates (pixels).
+     * @param point The world point to convert.
+     * @returns The screen space point.
+     */
+    convertWorldCoordinates(point: Point, viewport?: Viewport): Point {
+        viewport ??= this.gameService.getViewport()();
         const actualHeight =
             Math.floor(viewport.height / tileHeight) * tileHeight - tileHeight;
 
@@ -128,40 +134,65 @@ export class LevelService extends SubscribingService {
         return coords;
     }
 
+    /**
+     * Get all background tiles for the current level.
+     * @returns
+     */
     getBackgroundTiles(): Accessor<Tile[]> {
         const viewport = this.gameService.getViewport()();
         const level = this.gameService.getLevel()();
-        const tiles = this.convertLevelTiles(viewport, level);
+        const tiles = this.convertLevelTiles(level);
         const [getTiles, setTiles] = createSignal<Tile[]>(tiles);
         this.trackSubscription(
             zip(
                 this.gameService.observeViewport(),
                 this.gameService.observeLevel(),
             ).subscribe(([viewport, level]) => {
-                setTiles(this.convertLevelTiles(viewport, level));
+                setTiles(this.convertLevelTiles(level, viewport));
             }),
         );
 
         return getTiles;
     }
 
-    private convertLevelTiles(viewport: Viewport, level: Level): Tile[] {
-        return level.tiles.map((tile) => {
-            return {
-                ...tile,
-                point: this.convertWorldCoordinates(
-                    viewport,
-                    tile.worldLocation,
-                ),
-            };
-        });
-    }
-
+    /**
+     * Get the current max tile width in world coordinates.
+     */
     getMaxTileWidth() {
         return this.maxTileWidth;
     }
 
+    /**
+     * Get the current max tile height in world coordinates.
+     */
     getMaxTileHeight() {
         return this.maxTileHeight;
+    }
+
+    /**
+     * Given a point in world coordinates, return whether that tile is walkable in the current level.
+     * @param point
+     * @returns
+     */
+    isWalkableTile(point: Point): boolean {
+        const tiles = this.getBackgroundTiles()();
+
+        const matching = tiles.filter((tile) => {
+            return (
+                tile.worldLocation.x == point.x &&
+                tile.worldLocation.y == point.y
+            );
+        });
+
+        return matching.length >= 1;
+    }
+
+    private convertLevelTiles(level: Level, viewport?: Viewport): Tile[] {
+        return level.tiles.map((tile) => {
+            return {
+                ...tile,
+                point: this.convertWorldCoordinates(tile.worldLocation),
+            };
+        });
     }
 }

@@ -1,5 +1,6 @@
 import { useService } from 'solid-services';
 import { GameService } from '../../game';
+import { PlayerTile } from '../../player/components/player_tile';
 import { LevelService } from '../services/level.service';
 import { BackgroundTile } from '../tiles/components/background_tile';
 import { tileHeight, tileWidth } from '../tiles/models/tile';
@@ -50,11 +51,11 @@ export const LevelComponent = () => {
                             />
                         );
                     })}
-                <BackgroundTile
+                <PlayerTile
                     tileWidth={tileWidth}
                     tileHeight={tileHeight}
                     fill={'yellow'}
-                    tile={levelService.getPlayerTile()()}
+                    player={levelService.getPlayerTile()()}
                 />
             </g>
         </svg>

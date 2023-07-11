@@ -11,8 +11,8 @@ export const BackgroundTile = (props: {
         <rect
             width={props.tileWidth}
             height={props.tileHeight}
-            x={props.tile.point.x}
-            y={props.tile.point.y}
+            x={props.tile.point!.x}
+            y={props.tile.point!.y}
             fill={props.fill}
             stroke={props.stroke}
         />

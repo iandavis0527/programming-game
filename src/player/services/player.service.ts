@@ -19,10 +19,6 @@ export class PlayerService extends SubscribingService {
         this.levelService = useService(LevelService)();
     }
 
-    async initialize(): Promise<void> {
-        await super.initialize();
-    }
-
     /**
      * Handle updating the player position.
      * @param position The new position to update.
@@ -44,14 +40,14 @@ export class PlayerService extends SubscribingService {
             max: this.levelService.getMaxTileHeight(),
         });
 
-        const viewport = this.gameService.getViewport()();
+        const isDead = !this.levelService.isWalkableTile(player.worldLocation);
 
         this.gameService.updatePlayer({
             worldLocation: player.worldLocation,
             point: this.levelService.convertWorldCoordinates(
-                viewport,
                 player.worldLocation,
             ),
+            isDead: isDead,
         });
     }
 
@@ -83,19 +79,20 @@ export class PlayerService extends SubscribingService {
         this.movePlayerPosition({ x: 1, y: 0 });
     }
 
+    /**
+     * Reset current player position to level starting position.
+     */
     resetPlayer() {
         const player = this.gameService.getPlayer()();
-        const viewport = this.gameService.getViewport()();
         const original = cloneDeep(player.startingPosition);
 
-        const originalPoint = this.levelService.convertWorldCoordinates(
-            viewport,
-            original,
-        );
+        const originalPoint =
+            this.levelService.convertWorldCoordinates(original);
 
         this.gameService.updatePlayer({
             worldLocation: original,
             point: originalPoint,
+            isDead: false,
         });
     }
 }
