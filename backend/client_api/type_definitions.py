@@ -20,7 +20,7 @@ def get_files_in_directory(directory):
             filepath = Path(root, file)
             all_files.append(
                 {
-                    "path": str(filepath).replace(str(library_folder), ""),
+                    "path": str(filepath).replace(str(library_folder), "").lstrip("/"),
                     "name": str(file),
                 }
             )

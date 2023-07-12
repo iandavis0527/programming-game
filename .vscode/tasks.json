@@ -29,6 +29,11 @@
       ],
     },
     {
+      "label": "sleep",
+      "type": "shell",
+      "command": "sleep 1",
+    },
+    {
       "label": "terminate_all_tasks",
       "command": "echo ${input:terminate}",
       "type": "shell",

@@ -33,10 +33,11 @@
         },
         {
             "request": "launch",
-            "name": "[TEST] TYPE_DEFS",
+            "name": "[TEST] TYPE_DEF_SCRIPT",
             "type": "python",
             "program": "${workspaceFolder}/backend/test/test_type_definitions.py",
             "cwd": "${workspaceFolder}",
+            "preLaunchTask": "sleep",
             "presentation": {
                 "hidden": true,
                 "group": "",
@@ -53,5 +54,13 @@
             ],
             "stopAll": true,
         },
+        {
+            "name": "[TEST] TYPE_DEFS",
+            "configurations": [
+                "[DEBUG] BACKEND",
+                "[TEST] TYPE_DEF_SCRIPT"
+            ],
+            "stopAll": true,
+        }
     ]
 }
