@@ -17,6 +17,10 @@ export const Editor = (props: EditorProps) => {
             theme: 'vs-dark',
             automaticLayout: true,
         });
+        /// This is a hack to make the autocomplete automatically expand to show documentation.
+        (
+            editor.getContribution('editor.contrib.suggestController')! as any
+        ).widget.value._setDetailsVisible(true);
     });
     return (
         <div
