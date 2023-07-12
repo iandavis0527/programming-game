@@ -5,7 +5,7 @@
             "request": "launch",
             "type": "chrome",
             "url": "http://localhost:3000",
-            "webRoot": "${workspaceFolder}",
+            "webRoot": "${workspaceFolder}/frontend",
             "preLaunchTask": "npm-dev",
             "postDebugTask": "terminate_all_tasks",
             "presentation": {

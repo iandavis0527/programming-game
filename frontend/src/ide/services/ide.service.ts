@@ -17,20 +17,35 @@ export class IDEService extends BaseService {
         this.playerService = useService(PlayerService)();
     }
 
-    private async loadAvailableModules() {
+    private async loadAvailableModules(): Promise<
+        {
+            module: Module;
+            blob: Promise<Blob>;
+        }[]
+    > {
         const response = await fetch(
             'http://localhost:5000/api/available_definition_files',
         );
         const modules = (await response.json()) as Module[];
 
-        return modules.map(this.loadModule);
+        return modules.map((module) => {
+            return {
+                module: module,
+                blob: this.loadModule(module),
+            };
+        });
     }
 
-    private async loadModule(module: Module) {}
+    private async loadModule(module: Module): Promise<Blob> {
+        const response = await fetch(
+            `http://localhost:5000/api/load_definition/${module.path}`,
+        );
+        return response.blob();
+    }
 
-    async loadTypescriptModules() {
-        const libSource = '';
-        const libUri = 'ts:filename/robo.d.ts';
+    private async registerModule(module: Module, blob: Blob) {
+        const libSource = await blob.text();
+        const libUri = `ts:filename/${module.name}`;
 
         monaco.languages.typescript.javascriptDefaults.addExtraLib(
             libSource,
@@ -42,6 +57,15 @@ export class IDEService extends BaseService {
             'typescript',
             monaco.Uri.parse(libUri),
         );
+    }
+
+    async loadTypescriptModules() {
+        const available = await this.loadAvailableModules();
+
+        for (const loadedModule of available) {
+            const blob = await loadedModule.blob;
+            await this.registerModule(loadedModule.module, blob);
+        }
     }
 
     async onProgramRun(program: string) {
