@@ -76,13 +76,13 @@ export class IDEService extends BaseService {
         const statements = program.split('\n');
 
         for (const statement of statements) {
-            if (statement.toLowerCase() == 'move_forward();') {
+            if (statement.toLowerCase() == 'move_north();') {
                 this.playerService.movePlayerUp();
-            } else if (statement.toLowerCase() == 'move_left();') {
+            } else if (statement.toLowerCase() == 'move_west();') {
                 this.playerService.movePlayerLeft();
-            } else if (statement.toLowerCase() == 'move_right();') {
+            } else if (statement.toLowerCase() == 'move_east();') {
                 this.playerService.movePlayerRight();
-            } else if (statement.toLowerCase() == 'move_backward();') {
+            } else if (statement.toLowerCase() == 'move_south();') {
                 this.playerService.movePlayerDown();
             }
 
