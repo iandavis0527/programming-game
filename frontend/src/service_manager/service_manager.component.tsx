@@ -23,20 +23,6 @@ export const ServiceManager = lazy(async () => {
         allowNonTsExtensions: true,
     });
 
-    const libSource = '';
-    const libUri = 'ts:filename/robo.d.ts';
-
-    monaco.languages.typescript.javascriptDefaults.addExtraLib(
-        libSource,
-        libUri,
-    );
-
-    monaco.editor.createModel(
-        libSource,
-        'typescript',
-        monaco.Uri.parse(libUri),
-    );
-
     bootstrapAPI(gameService, levelService, viewportService);
 
     viewportService.onMediaQueried(840, 703);

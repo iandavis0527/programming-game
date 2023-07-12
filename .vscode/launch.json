@@ -7,7 +7,12 @@
             "url": "http://localhost:3000",
             "webRoot": "${workspaceFolder}",
             "preLaunchTask": "npm-dev",
-            "postDebugTask": "Terminate All Tasks"
+            "postDebugTask": "terminate_all_tasks",
+            "presentation": {
+                "hidden": true,
+                "group": "",
+                "order": 1
+            }
         },
         {
             "request": "launch",
@@ -19,16 +24,34 @@
                 "server",
                 "run"
             ],
-            "cwd": "${workspaceFolder}/backend"
+            "cwd": "${workspaceFolder}/backend",
+            "presentation": {
+                "hidden": true,
+                "group": "",
+                "order": 1
+            }
+        },
+        {
+            "request": "launch",
+            "name": "[TEST] TYPE_DEFS",
+            "type": "python",
+            "program": "${workspaceFolder}/backend/test/test_type_definitions.py",
+            "cwd": "${workspaceFolder}",
+            "presentation": {
+                "hidden": true,
+                "group": "",
+                "order": 1
+            }
         }
     ],
     "compounds": [
         {
-            "name": "[DEBUG] Application",
+            "name": "[DEBUG] APPLICATION",
             "configurations": [
                 "[DEBUG] BACKEND",
                 "[DEBUG] FRONTEND",
-            ]
-        }
+            ],
+            "stopAll": true,
+        },
     ]
 }

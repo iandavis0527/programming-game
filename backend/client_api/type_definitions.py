@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from flask_cors import cross_origin
 
 script_folder = Path(__file__).parent.resolve()
-library_folder = Path(script_folder, "lib")
+library_folder = Path(script_folder, "type_lib")
 blueprint = Blueprint("type_definitions", __name__)
 
 
@@ -20,7 +20,7 @@ def get_files_in_directory(directory):
             filepath = Path(root, file)
             all_files.append(
                 {
-                    "path": str(filepath),
+                    "path": str(filepath).replace(str(library_folder), ""),
                     "name": str(file),
                 }
             )

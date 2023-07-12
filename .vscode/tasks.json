@@ -8,10 +8,28 @@
       "script": "dev",
       "path": "./frontend",
       "isBackground": true,
-      "problemMatcher": [],
+      "problemMatcher": [
+        {
+          "pattern": {
+            "regexp": ".",
+            "file": 1,
+            "location": 2,
+            "message": 3
+          },
+          "background": {
+            "activeOnStart": true,
+            "beginsPattern": {
+              "regexp": "ready in 551 ms",
+            },
+            "endsPattern": {
+              "regexp": "."
+            }
+          }
+        }
+      ],
     },
     {
-      "label": "Terminate All Tasks",
+      "label": "terminate_all_tasks",
       "command": "echo ${input:terminate}",
       "type": "shell",
       "problemMatcher": []
