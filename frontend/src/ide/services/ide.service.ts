@@ -8,6 +8,47 @@ interface Module {
     name: string;
 }
 
+interface LoadedModule {
+    module: Module;
+    blob: Promise<Blob>;
+}
+
+class Command {
+    type: string;
+    raw: string;
+    body?: Command[];
+    closed?: boolean;
+    assignment?: string;
+    condition?: string;
+    increment?: string;
+
+    constructor(
+        type: string,
+        raw: string,
+        body?: Command[],
+        closed?: boolean,
+        assignment?: string,
+        condition?: string,
+        increment?: string,
+    ) {
+        this.type = type;
+        this.raw = raw;
+        this.body = body;
+        this.closed = closed;
+        this.assignment = assignment;
+        this.condition = condition;
+        this.increment = increment;
+    }
+
+    isControlBlock() {
+        return this.type == 'control';
+    }
+
+    isOpened() {
+        return this.closed != null && this.closed == false;
+    }
+}
+
 export class IDEService extends BaseService {
     private playerService: PlayerService;
 
@@ -17,12 +58,7 @@ export class IDEService extends BaseService {
         this.playerService = useService(PlayerService)();
     }
 
-    private async loadAvailableModules(): Promise<
-        {
-            module: Module;
-            blob: Promise<Blob>;
-        }[]
-    > {
+    private async loadAvailableModules(): Promise<LoadedModule[]> {
         const response = await fetch(
             'http://localhost:5000/api/available_definition_files',
         );
@@ -68,6 +104,58 @@ export class IDEService extends BaseService {
         }
     }
 
+    getCurrentControlBlock(currentCommand: Command): Command | null {
+        if (currentCommand.isControlBlock() && currentCommand.isOpened()) {
+            // let nested = currentCommand.body[-1];
+        }
+
+        return null;
+    }
+
+    parseForLoop(
+        cleaned: string,
+        forLoopMatch: RegExpMatchArray,
+        parsedCommandStack: Command[],
+    ) {
+        const assignment = forLoopMatch[1];
+        const condition = forLoopMatch[2];
+        const increment = forLoopMatch[3];
+        const newBlock = new Command(
+            'control',
+            cleaned,
+            [],
+            false,
+            assignment,
+            condition,
+            increment,
+        );
+
+        let current = null;
+
+        if (parsedCommandStack.length >= 1) {
+            current = parsedCommandStack[-1];
+        }
+
+        if (current?.isControlBlock() && current?.isOpened()) {
+            parsedCommandStack.push(newBlock);
+        } else {
+            current?.body!.push(newBlock);
+        }
+    }
+
+    parseBlockEnd(cleaned: string, parsedCommandStack: Command[]) {
+        const parsedCommand = parsedCommandStack[-1];
+
+        if (parsedCommand.closed) {
+            throw new Error('Unexpected } with no opened block!');
+        } else if (parsedCommand.body == null) {
+            throw new Error('Unexpected } with no opened block!');
+        }
+
+        parsedCommand.closed = true;
+        parsedCommand.body.push(new Command('basic', cleaned.replace('}', '')));
+    }
+
     async onProgramRun(program: string) {
         this.playerService.resetPlayer();
 
@@ -75,18 +163,49 @@ export class IDEService extends BaseService {
 
         const statements = program.split('\n');
 
+        // This is the first level of parsing, and will convert
+        // parse all control flow objects into higher level objects.
+        const parsedCommandStack: Command[] = [];
+        const forLoopRegex = 'for ((.*); (.*); (.*)) {';
+
         for (const statement of statements) {
-            if (statement.toLowerCase() == 'move_north();') {
-                this.playerService.movePlayerUp();
-            } else if (statement.toLowerCase() == 'move_west();') {
-                this.playerService.movePlayerLeft();
-            } else if (statement.toLowerCase() == 'move_east();') {
-                this.playerService.movePlayerRight();
-            } else if (statement.toLowerCase() == 'move_south();') {
-                this.playerService.movePlayerDown();
+            const cleaned = statement.toLowerCase();
+            const forLoopMatch = cleaned.match(forLoopRegex);
+
+            if (forLoopMatch != null) {
+                this.parseForLoop(cleaned, forLoopMatch, parsedCommandStack);
+            } else if (cleaned.endsWith('}')) {
+            } else {
+                let current = parsedCommandStack[-1];
+
+                if (current?.isControlBlock() && current?.isOpened()) {
+                    current.body!.push(new Command('basic', cleaned));
+                } else {
+                    parsedCommandStack.push(new Command('basic', cleaned));
+                }
             }
 
             await timeout(450);
+        }
+    }
+
+    async executeBasicCommands(commands: string[]) {
+        /** Execute a list of basic commands in order as given.
+         * Basic commands should be things parseable to a single instruction
+         * of a game service, and should not include things like logic or control flow
+         * statements like if, for, function definitions, etc.
+         */
+        for (const command of commands) {
+            const cleaned = command.toLowerCase();
+            if (cleaned == 'move_north();') {
+                this.playerService.movePlayerUp();
+            } else if (cleaned == 'move_west();') {
+                this.playerService.movePlayerLeft();
+            } else if (cleaned == 'move_east();') {
+                this.playerService.movePlayerRight();
+            } else if (cleaned == 'move_south();') {
+                this.playerService.movePlayerDown();
+            }
         }
     }
 }
