@@ -21,7 +21,7 @@
         "@solidjs/router": "^0.8.2",
         "auto-bind": "^5.0.1",
         "lodash": "^4.17.21",
-        "monaco-editor": "^0.40.0",
+        "monaco-editor": "^0.47.0",
         "rxjs": "^7.8.1",
         "solid-js": "^1.7.6",
         "solid-services": "^4.3.2"

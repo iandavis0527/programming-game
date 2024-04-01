@@ -17,13 +17,8 @@
         {
             "request": "launch",
             "name": "[DEBUG] BACKEND",
-            "type": "python",
-            "module": "flask",
-            "args": [
-                "--app",
-                "server",
-                "run"
-            ],
+            "type": "debugpy",
+            "module": "server",
             "cwd": "${workspaceFolder}/backend",
             "presentation": {
                 "hidden": true,
@@ -34,7 +29,7 @@
         {
             "request": "launch",
             "name": "[TEST] TYPE_DEF_SCRIPT",
-            "type": "python",
+            "type": "debugpy",
             "program": "${workspaceFolder}/backend/test/test_type_definitions.py",
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "sleep",
@@ -61,6 +56,7 @@
                 "[TEST] TYPE_DEF_SCRIPT"
             ],
             "stopAll": true,
+            
         }
     ]
 }

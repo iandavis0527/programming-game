@@ -3,8 +3,8 @@
 # Author: Ian Davis
 import os
 from pathlib import Path
-from flask import Blueprint, abort, Response
-from werkzeug.utils import secure_filename
+
+from flask import Blueprint, Response, abort
 from flask_cors import cross_origin
 
 script_folder = Path(__file__).parent.resolve()
@@ -20,7 +20,7 @@ def get_files_in_directory(directory):
             filepath = Path(root, file)
             all_files.append(
                 {
-                    "path": str(filepath).replace(str(library_folder), "").lstrip("/"),
+                    "path": str(filepath).replace(str(library_folder), "").replace("\\", "/").lstrip("/"),
                     "name": str(file),
                 }
             )
@@ -46,13 +46,17 @@ def read_file_in_chunks(filepath, chunk_size=4096):
             yield data
 
 
-@blueprint.route("/api/load_definition/<filename>")
+def ensure_library_file(filename: str):
+    return Path(library_folder, filename).resolve().relative_to(library_folder.resolve())
+
+
+@blueprint.route("/api/load_definition/<path:filename>")
 @cross_origin()
 def load_definition_file(filename: str):
-    secured_filename = secure_filename(filename)
-    print(filename, secured_filename)
+    if not ensure_library_file(filename):
+        abort(404, "Filename {0} does not exist".format(filename))
 
-    filepath = Path(library_folder, secured_filename).absolute().resolve()
+    filepath = Path(library_folder, filename).absolute().resolve()
 
     if not filepath.exists():
         abort(404, "Filename {0} does not exist".format(filename))
