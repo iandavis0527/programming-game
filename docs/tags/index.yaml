@@ -1,0 +1,8 @@
+- name: game
+  description: Everything related to the state of an active game instance
+- name: level
+  description: Everything related to a single level of the game
+- name: tile
+  description: Everything related to individual tiles of the game
+- name: player
+  description: Everything related to a single player of an active game instance

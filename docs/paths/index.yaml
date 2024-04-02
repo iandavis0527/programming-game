@@ -1,0 +1,2 @@
+/game/start:
+  $ref: ./game/start.yaml

@@ -1,0 +1,11 @@
+openapi: 3.0.3
+info:
+  title: Programming Game - OpenAPI 3.0
+  description: |-
+    This is an unnamed Programming Game developed with a python flask backend and solidJS/typescript frontend.
+    The API spec describes the communication protocol between the frontend and backend as well as all available types that can be referenced in the programming game.
+  version: 0.0.1
+tags:
+  $ref: ./tags/index.yaml
+paths:
+  $ref: ./paths/index.yaml

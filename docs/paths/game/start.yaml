@@ -1,0 +1,15 @@
+post:
+  tags:
+    - game
+  summary: Start a new game session
+  description: Start a new game session for the given player. This will overwrite any existing game saved for that player.
+  responses:
+    "200":
+      description: Game started successfully
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string

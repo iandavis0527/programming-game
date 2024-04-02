@@ -1,2 +1,7 @@
 *_downloaded.d.ts
 venv/
+node_modules
+test_python_gen
+openapi.gen.yaml
+tools/
+__pycache__

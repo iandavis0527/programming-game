@@ -13,5 +13,9 @@
     "editor.defaultFormatter": "ms-python.black-formatter"
   },
 
-  "python.defaultInterpreterPath": "backend/venv/bin/python"
+  "python.defaultInterpreterPath": "backend/venv/bin/python",
+
+  "terminal.integrated.env.windows": {
+    "PYTHONPATH": "${workspaceFolder};${env:PYTHONPATH}"
+  }
 }

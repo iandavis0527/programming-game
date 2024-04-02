@@ -1,4 +1,4 @@
-import { Level } from 'level/models/level.model';
+import { Level } from '../../level/models/level.model';
 
 export interface Game {
     viewWidth: number;
