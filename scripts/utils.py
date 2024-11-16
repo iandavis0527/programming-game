@@ -1,4 +1,5 @@
 import os
+import subprocess
 from contextlib import contextmanager
 from pathlib import Path
 
@@ -13,6 +14,30 @@ def get_tools_dir() -> Path:
 
 def get_repository_root() -> Path:
     return get_script_dir().parent
+
+
+def java_installed():
+    process = subprocess.run(["java", "--version"], capture_output=True)
+    return process.returncode == 0
+
+
+def npm_installed():
+    return (
+        subprocess.run(
+            "npm --version",
+            capture_output=True,
+            shell=True,
+        ).returncode
+        == 0
+    )
+
+
+def print_process_debug(process):
+    if process.stdout:
+        print(process.stdout.decode("utf-8"))
+
+    if process.stderr:
+        print(process.stderr.decode("utf-8"))
 
 
 @contextmanager

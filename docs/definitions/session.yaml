@@ -1,0 +1,7 @@
+type: object
+description: A session stores all data for a single player of the game over time.
+properties:
+  message:
+    type: string
+  userId:
+    type: string

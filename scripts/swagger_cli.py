@@ -1,16 +1,7 @@
 import subprocess
 from pathlib import Path
 
-
-def npm_installed():
-    return (
-        subprocess.run(
-            "npm --version",
-            capture_output=True,
-            shell=True,
-        ).returncode
-        == 0
-    )
+from scripts.utils import npm_installed, print_process_debug
 
 
 def swagger_cli_installed():
@@ -56,7 +47,17 @@ def bundle_swagger_spec(
 
     process = subprocess.run(args, capture_output=True, shell=True)
 
-    assert process.returncode == 0, "Failed to generate initial swagger bundle"
+    if not process.returncode == 0:
+        print_process_debug(process)
+
+        raise RuntimeError(
+            "Failed to run swagger-cli bundle(spec={0}, output_filepath={1}, format={2}, encoding={3})".format(
+                spec_filepath,
+                output_filepath,
+                output_format,
+                output_encoding,
+            )
+        )
 
     with open(output_filepath, "r") as initial_output_file:
         initial_output = initial_output_file.read()

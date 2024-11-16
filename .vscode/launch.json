@@ -38,6 +38,15 @@
                 "group": "",
                 "order": 1
             }
+        },
+        {
+            "request": "launch",
+            "name": "[BUILD] Compile OpenAPI Spec",
+            "type": "debugpy",
+            "program": "${workspaceFolder}/scripts/build_openapi_specs.py",
+            "args": [
+                "--assume_yes",
+            ]
         }
     ],
     "compounds": [

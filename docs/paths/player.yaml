@@ -1,5 +1,0 @@
-/load:
-  get:
-    tags:
-      - player
-    summary: Load a saved player state

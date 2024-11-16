@@ -1,4 +1,5 @@
 type: object
+description: A game stores all data for an active game being played or saved.
 properties:
   message:
     type: string

@@ -9,7 +9,4 @@ post:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              message:
-                type: string
+            $ref: "../../definitions/game.yaml"

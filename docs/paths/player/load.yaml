@@ -1,0 +1,12 @@
+get:
+  tags:
+    - player
+  summary: Load a saved player session
+  description: Given a player id and login, load the saved player session
+  responses:
+    "200":
+      description: The player session was loaded successfully.
+      content:
+        application/json:
+          schema:
+            $ref: "../../definitions/session.yaml"

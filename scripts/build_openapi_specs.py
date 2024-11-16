@@ -25,6 +25,12 @@ def main():
     )
 
     parser.add_argument(
+        "--python_template_location",
+        help="The location to the custom python codegen template to use",
+        default="docs/codegen/templates/python",
+    )
+
+    parser.add_argument(
         "--typescript_output_filepath",
         help="The path where the typescript client output will be stored (relative to the repository root)",
         default="common/typescript/",
@@ -49,6 +55,16 @@ def main():
         default="utf-8",
     )
 
+    parser.add_argument(
+        "-y",
+        "--yes",
+        "--assume_yes",
+        help="Assume yes to any interactive prompts the script may ask",
+        default=False,
+        action="store_true",
+        dest="assume_yes",
+    )
+
     args = parser.parse_args()
 
     bundle_swagger_spec(
@@ -61,12 +77,15 @@ def main():
         spec_filepath=args.spec_bundle_filepath,
         language="python",
         output_path=args.python_output_filepath,
+        template_location=args.python_template_location,
+        assume_yes=args.assume_yes,
     )
 
     run_swagger_codegen(
         spec_filepath=args.spec_bundle_filepath,
         language="typescript-fetch",
         output_path=args.typescript_output_filepath,
+        assume_yes=args.assume_yes,
     )
 
 
