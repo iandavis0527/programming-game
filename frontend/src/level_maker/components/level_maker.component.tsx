@@ -27,7 +27,7 @@ export const LevelMaker = () => {
 
             tiles.push(
                 <BackgroundTile
-                    point={{ x: x, y: y }}
+                    tile={{worldLocation: {x: x, y: y}}}
                     tileWidth={tileWidth}
                     tileHeight={tileHeight}
                     fill={fill}
@@ -55,8 +55,8 @@ export const LevelMaker = () => {
                     width={tileWidth}
                     height={tileHeight}
                     fill={'yellow'}
-                    x={gameService.getPlayer()().x}
-                    y={gameService.getPlayer()().y}
+                    x={gameService.getPlayer()().worldLocation.x}
+                    y={gameService.getPlayer()().worldLocation.y}
                 />
             </g>
         </svg>

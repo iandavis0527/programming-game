@@ -165,28 +165,28 @@ export class IDEService extends BaseService {
 
         // This is the first level of parsing, and will convert
         // parse all control flow objects into higher level objects.
-        const parsedCommandStack: Command[] = [];
-        const forLoopRegex = 'for ((.*); (.*); (.*)) {';
+        // const parsedCommandStack: Command[] = [];
+        // const forLoopRegex = 'for ((.*); (.*); (.*)) {';
 
         for (const statement of statements) {
-            const cleaned = statement.toLowerCase();
-            const forLoopMatch = cleaned.match(forLoopRegex);
-
-            if (forLoopMatch != null) {
-                this.parseForLoop(cleaned, forLoopMatch, parsedCommandStack);
-            } else if (cleaned.endsWith('}')) {
-            } else {
-                let current = parsedCommandStack[-1];
-
-                if (current?.isControlBlock() && current?.isOpened()) {
-                    current.body!.push(new Command('basic', cleaned));
-                } else {
-                    parsedCommandStack.push(new Command('basic', cleaned));
-                }
-            }
-
-            await timeout(450);
+            // const cleaned = statement.toLowerCase();
+            await this.executeBasicCommand(statement);
         }
+    }
+
+    async executeBasicCommand(command: string) {
+        const cleaned = command.toLowerCase();
+        if (cleaned == 'move_north();') {
+            this.playerService.movePlayerUp();
+        } else if (cleaned == 'move_west();') {
+            this.playerService.movePlayerLeft();
+        } else if (cleaned == 'move_east();') {
+            this.playerService.movePlayerRight();
+        } else if (cleaned == 'move_south();') {
+            this.playerService.movePlayerDown();
+        }
+
+        await timeout(450);
     }
 
     async executeBasicCommands(commands: string[]) {
@@ -196,16 +196,7 @@ export class IDEService extends BaseService {
          * statements like if, for, function definitions, etc.
          */
         for (const command of commands) {
-            const cleaned = command.toLowerCase();
-            if (cleaned == 'move_north();') {
-                this.playerService.movePlayerUp();
-            } else if (cleaned == 'move_west();') {
-                this.playerService.movePlayerLeft();
-            } else if (cleaned == 'move_east();') {
-                this.playerService.movePlayerRight();
-            } else if (cleaned == 'move_south();') {
-                this.playerService.movePlayerDown();
-            }
+            await this.executeBasicCommand(command);
         }
     }
 }
