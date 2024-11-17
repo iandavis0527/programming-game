@@ -44,9 +44,6 @@ export class PlayerService extends SubscribingService {
 
         this.gameService.updatePlayer({
             worldLocation: player.worldLocation,
-            point: this.levelService.convertWorldCoordinates(
-                player.worldLocation,
-            ),
             isDead: isDead,
         });
     }
@@ -86,12 +83,8 @@ export class PlayerService extends SubscribingService {
         const player = this.gameService.getPlayer()();
         const original = cloneDeep(player.startingPosition);
 
-        const originalPoint =
-            this.levelService.convertWorldCoordinates(original);
-
         this.gameService.updatePlayer({
             worldLocation: original,
-            point: originalPoint,
             isDead: false,
         });
     }

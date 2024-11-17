@@ -1,4 +1,4 @@
-export * from './components/level';
+export * from './components/level.component';
 export * from './data/tile_data';
 export * from './models/level.model';
 export * from './selectors/level.selector';

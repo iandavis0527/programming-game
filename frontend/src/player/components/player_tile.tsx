@@ -1,8 +1,10 @@
+import { Point } from '../../level';
 import { Player } from '../models/player.model';
 
-export const PlayerTile = (props: {
+export const PlayerEntity = (props: {
     tileWidth: number;
     tileHeight: number;
+    screenLocation: Point;
     player: Player;
     fill?: string;
     stroke?: string;
@@ -11,8 +13,8 @@ export const PlayerTile = (props: {
         <rect
             width={props.tileWidth}
             height={props.tileHeight}
-            x={props.player.point!.x}
-            y={props.player.point!.y}
+            x={props.screenLocation.x}
+            y={props.screenLocation.y}
             fill={props.player.isDead ? 'transparent' : props.fill}
             stroke={props.player.isDead ? 'transparent' : props.stroke}
         />

@@ -1,6 +1,7 @@
-import { Observable } from 'rxjs';
-import { Accessor } from 'solid-js';
+import { Observable, zip } from 'rxjs';
+import { Accessor, createSignal } from 'solid-js';
 import { useService } from 'solid-services';
+import { Point } from '../../level';
 import { Level } from '../../level/models/level.model';
 import { Player } from '../../player/models/player.model';
 import {
@@ -84,6 +85,35 @@ export class GameService extends SubscribingService {
         };
 
         this.playerSignalConnection.next(newPlayer);
+    }
+
+    /**
+     * Get the screen space coordinates for the current player's position.
+     * @returns An accessor that will update the window coordinates for the player.
+     */
+    getPlayerWindowCoordinates(): Accessor<Point> {
+        const player = this.getPlayer()();
+        const point = this.viewportService.convertWorldCoordinates(
+            player.worldLocation,
+        );
+
+        const [getCoords, setCoords] = createSignal<{ x: number; y: number }>(
+            point,
+        );
+
+        this.trackSubscription(
+            zip(this.observePlayer(), this.observeViewport()).subscribe(
+                ([player, viewport]) => {
+                    setCoords(
+                        this.viewportService.convertWorldCoordinates(
+                            player.worldLocation,
+                        ),
+                    );
+                },
+            ),
+        );
+
+        return getCoords;
     }
 
     getLevel(): Accessor<Level> {

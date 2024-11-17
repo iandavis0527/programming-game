@@ -1,7 +1,9 @@
+import { Point } from '../../services/level.service';
 import { Tile } from '../models/tile';
 
 export const BackgroundTile = (props: {
     tile: Tile;
+    screenLocation: Point;
     tileWidth: number;
     tileHeight: number;
     fill?: string;
@@ -11,8 +13,8 @@ export const BackgroundTile = (props: {
         <rect
             width={props.tileWidth}
             height={props.tileHeight}
-            x={props.tile.point!.x}
-            y={props.tile.point!.y}
+            x={props.screenLocation.x}
+            y={props.screenLocation.y}
             fill={props.fill}
             stroke={props.stroke}
         />

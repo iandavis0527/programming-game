@@ -57,63 +57,11 @@ export class LevelService extends SubscribingService {
     }
 
     /**
-     * Get the screen space coordinates for the current player's position.
-     * @returns An accessor that will update the window coordinates for the player.
-     */
-    getPlayerWindowCoordinates(): Accessor<Point> {
-        const player = this.gameService.getPlayer()();
-        const point = this.convertWorldCoordinates(player.worldLocation);
-
-        const [getCoords, setCoords] = createSignal<{ x: number; y: number }>(
-            point,
-        );
-
-        this.trackSubscription(
-            zip(
-                this.gameService.observePlayer(),
-                this.gameService.observeViewport(),
-            ).subscribe(([player, viewport]) => {
-                setCoords(
-                    this.convertWorldCoordinates(
-                        player.worldLocation,
-                        viewport,
-                    ),
-                );
-            }),
-        );
-
-        return getCoords;
-    }
-
-    /**
      * Get a display tile for the player, with coordinates converted.
      * @returns The player tile.
      */
     getPlayerTile(): Accessor<Player> {
-        const player = this.gameService.getPlayer()();
-        const point = this.convertWorldCoordinates(player.worldLocation);
-
-        const [getPlayer, setPlayer] = createSignal<Player>({
-            ...player,
-            point: point,
-        });
-
-        this.trackSubscription(
-            zip(
-                this.gameService.observePlayer(),
-                this.gameService.observeViewport(),
-            ).subscribe(([player, viewport]) => {
-                setPlayer({
-                    ...player,
-                    point: this.convertWorldCoordinates(
-                        player.worldLocation,
-                        viewport,
-                    ),
-                });
-            }),
-        );
-
-        return getPlayer;
+        return this.gameService.getPlayer();
     }
 
     /**
@@ -191,7 +139,10 @@ export class LevelService extends SubscribingService {
         return level.tiles.map((tile) => {
             return {
                 ...tile,
-                point: this.convertWorldCoordinates(tile.worldLocation),
+                point: this.convertWorldCoordinates(
+                    tile.worldLocation,
+                    viewport,
+                ),
             };
         });
     }
